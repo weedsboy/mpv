@@ -91,3 +91,100 @@ pkg-config --cflags --libs libavcodec
 
 ### 总结
 通过上述步骤，您可以在 Windows 上使用 MSYS2 和 MinGW 编译原生 Windows 版本的 `mpv`。这个过程相对直接，尤其适合开发者需要在 Windows 平台上定制和编译 `mpv` 的场景。
+
+
+
+
+要使用 **Meson** 来设置和编译 **libmpv**，并指定安装路径（例如 `/mingw64`），需要按以下步骤操作：
+
+### 1. 获取 libmpv 源代码
+
+首先，您需要获取 libmpv 的源代码。您可以从 **mpv** 的 GitHub 仓库克隆代码：
+
+```bash
+git clone https://github.com/mpv-player/mpv.git
+cd mpv
+```
+
+### 2. 确保安装依赖项
+
+在 Windows 上使用 **MSYS2** 和 **MinGW** 构建 **mpv** 需要一些必要的依赖项。确保您已安装 **libmpv** 构建所需的库。
+
+打开 **MSYS2 MinGW 64-bit Shell**，并安装必需的包：
+
+```bash
+pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-meson mingw-w64-x86_64-ninja mingw-w64-x86_64-libmpv
+```
+
+这些包包括：
+
+- `mingw-w64-x86_64-gcc`：GCC 编译器。
+- `mingw-w64-x86_64-meson`：Meson 构建系统。
+- `mingw-w64-x86_64-ninja`：Ninja 构建工具。
+- `mingw-w64-x86_64-libmpv`：libmpv 相关的依赖库。
+
+如果缺少其他依赖（例如 **FFmpeg**、**libass**、**libbluray** 等），请安装相应的库。
+
+### 3. 配置 Meson 构建目录
+
+进入 `mpv` 项目的根目录，使用 **Meson** 配置构建目录，并设置安装路径为 `/mingw64`。运行以下命令：
+
+```bash
+meson setup build --prefix=/mingw64 --buildtype debug
+```
+
+这里的参数说明：
+
+- `build`: 构建目录（Meson 将在此目录中创建构建文件）。
+- `--prefix=/mingw64`: 指定安装路径为 `/mingw64`，即将安装到 **MinGW** 的 64 位系统目录。
+- `--buildtype debug`: 使用调试构建类型，生成调试符号（如果需要）。
+
+如果您不需要调试符号，可以使用 `--buildtype release` 以生成优化过的发布版本。
+
+### 4. 编译 libmpv
+
+配置完成后，使用 **Ninja** 来编译项目：
+
+```bash
+ninja -C build
+```
+
+这将开始编译 **libmpv**。 `-C` 参数指示 **Ninja** 在 `build` 目录中进行构建。
+
+### 5. 安装 libmpv（可选）
+
+编译完成后，您可以选择将 **libmpv** 安装到指定的目录（在本例中为 `/mingw64`）。运行以下命令进行安装：
+
+```bash
+ninja -C build install
+```
+
+这会将构建的文件安装到您在 `--prefix` 参数中指定的路径（例如 `/mingw64`）中。
+
+### 6. 验证安装
+
+您可以检查安装是否成功，确认 **libmpv** 库文件是否位于指定的安装路径中。可以通过以下命令检查 `libmpv` 的安装：
+
+```bash
+ls /mingw64/lib
+```
+
+### 7. 使用 libmpv
+
+安装完成后，您可以在 **C++ 项目** 中使用 **libmpv**，并确保在编译和链接时将 `/mingw64/include` 和 `/mingw64/lib` 目录包含在内。例如：
+
+```bash
+g++ -o your_program your_program.cpp -I/mingw64/include -L/mingw64/lib -lmpv
+```
+
+### 解决常见问题
+
+- 如果编译过程中遇到缺失依赖或错误，确保 **MSYS2** 环境中安装了所有相关依赖包。
+- 如果 `meson setup` 命令遇到问题，可以尝试清理构建目录并重新配置：
+  ```bash
+  meson setup build --reconfigure --prefix=/mingw64
+  ```
+
+### 总结
+
+通过以上步骤，您应该能够在 Windows 上使用 **Meson** 和 **MinGW** 编译并安装 **libmpv**。如果遇到问题或有任何疑问，请随时告诉我！
