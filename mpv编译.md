@@ -188,3 +188,7 @@ g++ -o your_program your_program.cpp -I/mingw64/include -L/mingw64/lib -lmpv
 ### 总结
 
 通过以上步骤，您应该能够在 Windows 上使用 **Meson** 和 **MinGW** 编译并安装 **libmpv**。如果遇到问题或有任何疑问，请随时告诉我！
+
+
+
+ninja -C build libmpv-2.dll
