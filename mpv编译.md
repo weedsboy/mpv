@@ -1,3 +1,21 @@
+meson setup build --prefix=/mingw64
+
+pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-meson mingw-w64-x86_64-ninja mingw-w64-x86_64-libmpv
+
+meson setup build --prefix=/mingw64 --buildtype debug
+
+meson setup build --prefix=/mingw64 --buildtype debug --reconfigure
+
+meson configure build -Dlibmpv=true -Ddefault_library=static
+
+meson configure build -Dlibmpv=true -Ddefault_library=shared
+
+ninja -C build libmpv-2.dll
+
+
+
+
+
 在 Windows 上编译 `mpv` 以生成原生 Windows 可执行文件，通常使用 **MSYS2** 环境与 **MinGW** 工具链。以下是详细的步骤：
 
 ### 1. 安装 MSYS2
@@ -188,11 +206,3 @@ g++ -o your_program your_program.cpp -I/mingw64/include -L/mingw64/lib -lmpv
 ### 总结
 
 通过以上步骤，您应该能够在 Windows 上使用 **Meson** 和 **MinGW** 编译并安装 **libmpv**。如果遇到问题或有任何疑问，请随时告诉我！
-
-meson setup build --prefix=/mingw64
-pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-meson mingw-w64-x86_64-ninja mingw-w64-x86_64-libmpv
-meson setup build --prefix=/mingw64 --buildtype debug
-meson setup build --prefix=/mingw64 --buildtype debug --reconfigure
-meson configure build -Dlibmpv=true -Ddefault_library=static
-meson configure build -Dlibmpv=true -Ddefault_library=shared
-ninja -C build libmpv-2.dll
